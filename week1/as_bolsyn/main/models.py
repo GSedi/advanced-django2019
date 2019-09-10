@@ -13,6 +13,8 @@ class Restaurant(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    objects = RestaurantManager()
+
 
 class Menu(models.Model):
     name = models.CharField("Name", max_length=50)
