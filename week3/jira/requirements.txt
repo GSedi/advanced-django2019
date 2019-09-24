@@ -1,3 +1,4 @@
+djangorestframework-jwt
 astroid==2.0.4
 Babel==2.7.0
 Django==2.1.1

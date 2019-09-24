@@ -30,7 +30,8 @@ class Block(models.Model):
 class Task(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField(max_length=500)
-    order = models.PositiveIntegerField()
+    order = models.IntegerField(blank=True, default=None)
+    block = models.ForeignKey(Block, on_delete=models.DO_NOTHING, related_name='block_tasks')
     creator = models.ForeignKey(MainUser, on_delete=models.DO_NOTHING, related_name='creator_tasks')
     executor = models.ForeignKey(MainUser, on_delete=models.DO_NOTHING, related_name='executor_tasks')
     created_at = models.DateTimeField(auto_now_add=True)
