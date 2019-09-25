@@ -1,4 +1,4 @@
-from main.models import Project, Block, Task
+from main.models import Project, Block, Task, MemberProject, TaskDocument, TaskComment
 from rest_framework import serializers
 from users.serializers import UserSerializer
 from main import constants
@@ -84,4 +84,35 @@ class TaskSerializerCreateUpdate(serializers.ModelSerializer):
 
     class Meta:
         model = Task
+        fields = '__all__'
+
+
+class MemberProjectSerializer(serializers.ModelSerializer):
+    member_id = serializers.IntegerField(write_only=True)
+    project_id = serializers.IntegerField(write_only=True)
+    member = UserSerializer(read_only=True)
+    project = ProjectSerializerGet(read_only=True)
+
+    class Meta:
+        model = MemberProject
+        fields = '__all__'
+
+
+class TaskDocumentSerializer(serializers.ModelSerializer):
+    task_id = serializers.IntegerField(write_only=True)
+    creator = UserSerializer(read_only=True)
+    task = TaskSerializerGet(read_only=True)
+
+    class Meta:
+        model = TaskDocument
+        fields = '__all__'
+
+
+class TaskCommentSerializer(serializers.ModelSerializer):
+    task_id = serializers.IntegerField(write_only=True)
+    creator = UserSerializer(read_only=True)
+    task = TaskSerializerGet(read_only=True)
+
+    class Meta:
+        model = TaskComment
         fields = '__all__'

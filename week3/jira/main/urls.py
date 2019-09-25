@@ -1,7 +1,9 @@
 from django.urls import path
-from main.views import ProjectListAPIView, \
-    ProjectDetailAPIView, BlockListView, BlockDetailView, TaskViewSet
 from rest_framework import routers
+
+from main.views import ProjectListAPIView, \
+    ProjectDetailAPIView, BlockListView, BlockDetailView, TaskViewSet, \
+    MemberProjectViewSet, TaskDocumentViewSet, TaskCommentViewSet
 
 urlpatterns = [
     path('projects/', ProjectListAPIView.as_view()),
@@ -12,5 +14,8 @@ urlpatterns = [
 
 router = routers.DefaultRouter()
 router.register('tasks', TaskViewSet, base_name='main')
+router.register('member_projects', MemberProjectViewSet, base_name='main')
+router.register('task_documents', TaskDocumentViewSet, base_name='main')
+router.register('task_comments', TaskCommentViewSet, base_name='main')
 
 urlpatterns += router.urls
