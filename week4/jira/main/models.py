@@ -27,6 +27,17 @@ class Block(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
+class TaskManager(models.Manager):
+    def tasks_by_block(self, block):
+        return self.filter(block=block)
+
+    def tasks_by_creator_and_block(self, block, user):
+        return self.filter(block=block, creator=user)
+
+    def tasks_by_executor_and_block(self, block, user):
+        return self.filter(block=block, executor=user)
+
+
 class Task(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField(max_length=500)
