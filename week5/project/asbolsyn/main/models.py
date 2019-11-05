@@ -1,3 +1,3 @@
 from django.db import models
+from users.models import MainUser
 
-# Create your models here.

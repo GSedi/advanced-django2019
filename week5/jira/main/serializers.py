@@ -4,13 +4,17 @@ from users.serializers import UserSerializer
 from main import constants
 
 
-class ProjectSerializerGet(serializers.ModelSerializer):
-    creator_name = serializers.SerializerMethodField()
-
+class ProjectShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ('id', 'name', 'description', 'creator_id', 'creator_name', 'created_at')
+        fields = ('id', 'name', 'creator_id')
 
+
+class ProjectDetailSerializer(ProjectShortSerializer):
+    creator_name = serializers.SerializerMethodField()
+
+    class Meta(ProjectShortSerializer.Meta):
+        fields = ProjectShortSerializer.Meta.fields + ('description', 'creator_name', 'created_at')
 
     def get_creator_name(self, obj):
         if obj.creator is not None:
@@ -18,11 +22,10 @@ class ProjectSerializerGet(serializers.ModelSerializer):
         return ''
 
 
-class ProjectSerializerCreateUpdate(serializers.ModelSerializer):
+class ProjectFullSerializer(ProjectShortSerializer):
     creator = UserSerializer(read_only=True)
 
-    class Meta:
-        model = Project
+    class Meta(ProjectShortSerializer.Meta):
         fields = '__all__'
 
 
@@ -45,11 +48,16 @@ class BlockSerializerGet(serializers.ModelSerializer):
 
 
 class BlockSerializerCreateUpdate(serializers.ModelSerializer):
-    project = ProjectSerializerCreateUpdate(read_only=True)
+    project = ProjectFullSerializer(read_only=True)
 
     class Meta:
         model = Block
         fields = '__all__'
+
+    def validate_type(self, value):
+        if 1 < value > 3:
+            raise serializers.ValidationError('Type options: [1, 2, 3]')
+        return value
 
 
 class TaskSerializerGet(serializers.ModelSerializer):
@@ -91,7 +99,7 @@ class MemberProjectSerializer(serializers.ModelSerializer):
     member_id = serializers.IntegerField(write_only=True)
     project_id = serializers.IntegerField(write_only=True)
     member = UserSerializer(read_only=True)
-    project = ProjectSerializerGet(read_only=True)
+    project = ProjectShortSerializer(read_only=True)
 
     class Meta:
         model = MemberProject
